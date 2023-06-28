@@ -1,7 +1,7 @@
 //CLI: npm install mongoose --save
 const mongoose = require('mongoose');
 const MyConstants = require('./MyConstants');
-const uri = 'mongodb+srv://' + MyConstants.DB_USER + ':' + MyConstants.DB_PASS + '@' + MyConstants.DB_SERVER + '/' + MyConstants.DB_DATABASE;
+const uri = 'mongodb+srv://' + MyConstants.db_user + ':' + MyConstants.db_pass + '@' + MyConstants.db_server + '/' + MyConstants.db_database;
 mongoose.connect(uri, { useNewUrlParser: true })
-  .then(() => { console.log('Connected to ' + MyConstants.DB_SERVER + '/' + MyConstants.DB_DATABASE); })
+  .then(() => { console.log('Connected to ' + MyConstants.db_server + '/' + MyConstants.db_database); })
   .catch((err) => { console.error(err); });

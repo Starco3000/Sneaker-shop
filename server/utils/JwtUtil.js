@@ -5,15 +5,15 @@ const JwtUtil = {
   genToken(username, password) {
     const token = jwt.sign(
       { username: username, password: password },
-      MyConstants.JWT_SECRET,
-      { expiresIn: MyConstants.JWT_EXPIRES }
+      MyConstants.jwt_secret,
+      { expiresIn: MyConstants.jwt_expires }
     );
     return token;
   },
   checkToken(req, res, next) {
     const token = req.headers['x-access-token'] || req.headers['authorization'];
     if (token) {
-      jwt.verify(token, MyConstants.JWT_SECRET, (err, decoded) => {
+      jwt.verify(token, MyConstants.jwt_secret, (err, decoded) => {
         if (err) {
           return res.json({
             success: false,

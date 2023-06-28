@@ -4,8 +4,8 @@ const MyConstants = require('./MyConstants');
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: MyConstants.EMAIL_USER,
-    pass: MyConstants.EMAIL_PASS
+    user: MyConstants.email_user,
+    pass: MyConstants.email_pass
   }
 });
 const EmailUtil = {
@@ -13,7 +13,7 @@ const EmailUtil = {
     const text = 'Thanks for signing up, please input these informations to activate your account:\n\t .id: ' + id + '\n\t .token: ' + token;
     return new Promise(function (resolve, reject) {
       const mailOptions = {
-        from: MyConstants.EMAIL_USER,
+        from: MyConstants.email_user,
         to: email,
         subject: 'Signup | Verification',
         text: text

@@ -1,12 +1,13 @@
-require ('./local.env');
+require ('dotenv').config();
+
 const MyConstants = {
-    DB_SERVER: process.env.DB_SERVER,
-    DB_USER: process.env.DB_USER,
-    DB_PASS: process.env.DB_PASS,
-    DB_DATABASE: process.env.DB_DATABASE,
-    JWT_SECRET: process.env.JWT_SECRET,
-    JWT_EXPIRES: process.env.JWT_EXPIRES, // in milliseconds
-    EMAIL_USER: process.env.EMAIL_USER, // gmail service
-    EMAIL_PASS: process.env.EMAIL_PASS
+    db_server: process.env.DB_SERVER,
+    db_user: process.env.DB_USER,
+    db_pass: process.env.DB_PASS,
+    db_database: process.env.DB_DATABASE,
+    jwt_secret: process.env.JWT_SECRET,
+    jwt_expires: process.env.JWT_EXPIRES, // in milliseconds
+    email_user: process.env.EMAIL_USER, // gmail service
+    email_pass: process.env.EMAIL_PASS
   };
   module.exports = MyConstants;
