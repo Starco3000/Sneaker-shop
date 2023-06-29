@@ -2,9 +2,14 @@ const express = require('express');
 const router = express.Router();
 // utils
 const JwtUtil = require('../utils/JwtUtil');
+
 // daos
 const AdminDAO = require('../models/AdminDAO');
-// login
+const CategoryDAO = require('../models/CategoryDAO');
+const ProductDAO = require('../models/ProductDAO');
+
+
+// login Account admin
 router.post('/login', async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
@@ -20,8 +25,92 @@ router.post('/login', async function (req, res) {
     res.json({ success: false, message: 'Please input username and password' });
   }
 });
+// Check token Login Account Admin
 router.get('/token', JwtUtil.checkToken, function (req, res) {
   const token = req.headers['x-access-token'] || req.headers['authorization'];
   res.json({ success: true, message: 'Token is valid', token: token });
 });
+
+
+// category - Checktoken Show list category
+router.get('/categories', JwtUtil.checkToken, async function (req, res) {
+  const categories = await CategoryDAO.selectAll();
+  res.json(categories);
+});
+
+// category - Checktoken Insert New Category
+router.post('/categories', JwtUtil.checkToken, async function (req, res) {
+  const name = req.body.name;
+  const category = { name: name };
+  const result = await CategoryDAO.insert(category);
+  res.json(result);
+});
+
+// category - Checktoken Update Category
+router.put('/categories/:id', JwtUtil.checkToken, async function (req, res) {
+  const _id = req.params.id;
+  const name = req.body.name;
+  const category = { _id: _id, name: name };
+  const result = await CategoryDAO.update(category);
+  res.json(result);
+});
+
+// category - Checktoken Delete Category
+router.delete('/categories/:id', JwtUtil.checkToken, async function (req, res) {
+  const _id = req.params.id;
+  const result = await CategoryDAO.delete(_id);
+  res.json(result);
+});
+
+
+// product - ShowListOfProduct
+router.get('/products', JwtUtil.checkToken, async function (req, res) {
+  // pagination
+  const noProducts = await ProductDAO.selectByCount();
+  const sizePage = 5;                                 //The number of product will show on view
+  const noPages = Math.ceil(noProducts / sizePage);   // Create page list - Lấy tổng số SP chia cho số SP hiện 1 trang => Số page có thể chia (ceil - Làm tròn lên)
+  var curPage = 1;                                    // The current page 
+  if (req.query.page) curPage = parseInt(req.query.page); // /products?page=xxx
+  const skip = (curPage - 1) * sizePage;
+  const products = await ProductDAO.selectBySkipLimit(skip, sizePage);
+  // return
+  const result = { products: products, noPages: noPages, curPage: curPage };
+  res.json(result);
+});
+
+
+// product -- API checktoken Add new Product
+router.post('/products', JwtUtil.checkToken, async function (req, res) {
+  const name = req.body.name;
+  const price = req.body.price;
+  const cid = req.body.category;
+  const image = req.body.image;
+  const now = new Date().getTime(); // milliseconds
+  const category = await CategoryDAO.selectByID(cid);
+  const product = { name: name, price: price, image: image, cdate: now, category: category };
+  const result = await ProductDAO.insert(product);
+  res.json(result);
+});
+
+// product -- API Update product
+router.put('/products/:id', JwtUtil.checkToken, async function (req, res) {
+  const _id = req.params.id;
+  const name = req.body.name;
+  const price = req.body.price;
+  const cid = req.body.category;
+  const image = req.body.image;
+  const now = new Date().getTime(); // milliseconds
+  const category = await CategoryDAO.selectByID(cid);
+  const product = { _id: _id, name: name, price: price, image: image, cdate: now, category: category };
+  const result = await ProductDAO.update(product);
+  res.json(result);
+});
+
+// product -- API Delete Product
+router.delete('/products/:id', JwtUtil.checkToken, async function (req, res) {
+  const _id = req.params.id;
+  const result = await ProductDAO.delete(_id);
+  res.json(result);
+});
+
 module.exports = router;
